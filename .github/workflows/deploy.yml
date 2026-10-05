@@ -23,5 +23,13 @@ jobs:
           tenant-id: 0768634a-2137-4f67-8033-8c0fb5a11851
           subscription-id: 51b841dc-d9c6-44eb-b6db-9c55cfd734db
 
-      - name: Verify access
+      - name: Collect site files
+        run: |
+          mkdir site
+          cp index.html style.css site/
+
+      - name: Upload to static website
+        run: az storage blob upload-batch --account-name briantinawiresume --auth-mode login --destination '$web' --source site --overwrite true
+
+      - name: Verify upload
         run: az storage blob list --account-name briantinawiresume --container-name '$web' --auth-mode login --output table
